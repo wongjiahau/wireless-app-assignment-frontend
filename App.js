@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
-import { DBLogin } from './database';
+import { DBLogin, DBFetchTask, DBCreateTask, DBDeleteTask, DBUpdateTask } from './database';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -14,18 +14,48 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <Text>{this.state.text}</Text>
-        <Button title="Press me" onPress={this.handleButtonPress}/>
+        <Button title="login" onPress={this.handleLogin}/>
+        <Button title="fetch task" onPress={this.handleFetchTask}/>
+        <Button title="create task" onPress={this.handleCreateTask}/>
+        <Button title="delete task" onPress={this.handleDeleteTask}/>
+        <Button title="update task" onPress={this.handleUpdateTask}/>
       </View>
     );
   }
 
-  handleButtonPress = async () => {
-    alert("hi");
-    const result = await DBLogin("john@gmail.com", "1234");
+  handleLogin = async () => {
+    const result = await DBLogin("john@gmail.com", "123");
     this.setState({
       text: JSON.stringify(result)
     })
-    // alert(result.json().matching_user_id);
+  }
+
+  handleFetchTask = async () => {
+    const result = await DBFetchTask("john@gmail.com");
+    this.setState({
+      text: JSON.stringify(result)
+    })
+  }
+
+  handleCreateTask = async () => {
+    const result = await DBCreateTask(1,"New title","new content", 0);
+    this.setState({
+      text: JSON.stringify(result)
+    })
+  }
+
+  handleDeleteTask = async () => {
+    const result = await DBDeleteTask(2)
+    this.setState({
+      text: JSON.stringify(result)
+    })
+  }
+
+  handleUpdateTask = async () => {
+    const result = await DBUpdateTask(1, "updated title", "updated content", 1);
+    this.setState({
+      text: JSON.stringify(result)
+    })
   }
 }
 
