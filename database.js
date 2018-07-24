@@ -37,12 +37,13 @@ export async function DBDeleteTask(task_id /* number */) {
     return await result.json();
 }
 
-export async function DBUpdateTask(task_id, title, content, pinned) {
+export async function DBUpdateTask(task_id, title, content, pinned, reminders) {
     const body = {
-        task_id, //: number;
-        title,   //: string;
-        content, //: string;
-        pinned  //: number; // Either 1 or 0
+        task_id,   //: number;
+        title,     //: string;
+        content,   //: string;
+        pinned,    //: number; // Either 1 or 0
+        reminders //: {date: number}[]
     }
     const result = await fetch(
         IPAddress("task"),
@@ -52,12 +53,13 @@ export async function DBUpdateTask(task_id, title, content, pinned) {
 }
 
 
-export async function DBCreateTask(user_id, title, content, pinned) {
+export async function DBCreateTask(user_id, title, content, pinned, reminders) {
     const body = {
         user_id,    //:   number;
         title,      //:   string;
         content,    //:   string;
-        pinned      //:   number; // Either 1 or 0
+        pinned,     //:   number; // Either 1 or 0
+        reminders   //:   {date: number}[]
     };
     const result = await fetch(
         IPAddress("task"),
