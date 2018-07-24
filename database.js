@@ -21,6 +21,14 @@ export async function DBLogin(email, password) {
     return await result.json();
 }
 
+export async function DBLogout(session_id) {
+    const result = await fetch(
+        IPAddress("logout"),
+        JsonRequest("POST", { session_id })
+    );
+    return await result.json();
+}
+
 export async function DBFetchTask(session_id) {
     const result = await fetch(
         IPAddress("task/" + session_id),

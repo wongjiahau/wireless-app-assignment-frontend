@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
-import { DBLogin, DBFetchTask, DBCreateTask, DBDeleteTask, DBUpdateTask } from './database';
+import { DBLogin, DBFetchTask, DBCreateTask, DBDeleteTask, DBUpdateTask, DBLogout } from './database';
 
 export class Tester extends React.Component {
   constructor(props) {
@@ -16,6 +16,7 @@ export class Tester extends React.Component {
       <View style={styles.container}>
         <Text>{this.state.text}</Text>
         <Button title="login" onPress={this.handleLogin}/>
+        <Button title="logout" onPress={this.handleLogout}/>
         <Button title="fetch task" onPress={this.handleFetchTask}/>
         <Button title="create task" onPress={this.handleCreateTask}/>
         <Button title="delete task" onPress={this.handleDeleteTask}/>
@@ -29,6 +30,13 @@ export class Tester extends React.Component {
     this.setState({
       text: JSON.stringify(result),
       session_id: result.session_id
+    })
+  }
+
+  handleLogout = async () => {
+    const result = await DBLogout(this.state.session_id);
+    this.setState({
+      text: JSON.stringify(result),
     })
   }
 
