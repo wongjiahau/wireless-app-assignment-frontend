@@ -21,9 +21,9 @@ export async function DBLogin(email, password) {
     return await result.json();
 }
 
-export async function DBFetchTask(email) {
+export async function DBFetchTask(session_id) {
     const result = await fetch(
-        IPAddress("task/" + email),
+        IPAddress("task/" + session_id),
         JsonRequest("GET")
     );
     return await result.json();
@@ -53,9 +53,9 @@ export async function DBUpdateTask(task_id, title, content, pinned, reminders) {
 }
 
 
-export async function DBCreateTask(user_id, title, content, pinned, reminders) {
+export async function DBCreateTask(session_id, title, content, pinned, reminders) {
     const body = {
-        user_id,    //:   number;
+        session_id, //:   number;
         title,      //:   string;
         content,    //:   string;
         pinned,     //:   number; // Either 1 or 0

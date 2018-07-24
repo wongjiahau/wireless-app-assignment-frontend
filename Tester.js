@@ -6,7 +6,8 @@ export class Tester extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "Hello"
+      text: "Hello",
+      session_id: null
     };
   }
 
@@ -26,19 +27,20 @@ export class Tester extends React.Component {
   handleLogin = async () => {
     const result = await DBLogin("john@gmail.com", "1234");
     this.setState({
-      text: JSON.stringify(result)
+      text: JSON.stringify(result),
+      session_id: result.session_id
     })
   }
 
   handleFetchTask = async () => {
-    const result = await DBFetchTask("john@gmail.com");
+    const result = await DBFetchTask(this.state.session_id);
     this.setState({
       text: JSON.stringify(result)
     })
   }
 
   handleCreateTask = async () => {
-    const result = await DBCreateTask(1,"New title","new content", 0, [{date: 9999}]);
+    const result = await DBCreateTask(this.state.session_id,"New title","new content", 0, [{date: 9999}]);
     this.setState({
       text: JSON.stringify(result)
     })
