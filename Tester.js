@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
-import { DBLogin, DBFetchTask, DBCreateTask, DBDeleteTask, DBUpdateTask, DBLogout } from './database';
+import { DBLogin, DBFetchTask, DBCreateTask, DBDeleteTask, DBUpdateTask, DBLogout } from './js/database';
+import { saveSessionId, retrieveSessionId } from './localStorage';
 
 export class Tester extends React.Component {
   constructor(props) {
@@ -9,6 +10,13 @@ export class Tester extends React.Component {
       text: "Hello",
       session_id: null
     };
+  }
+
+  async componentDidMount() {
+    const session_id = await retrieveSessionId();
+    this.setState({
+      session_id: session_id
+    });
   }
 
   render() {
@@ -26,15 +34,16 @@ export class Tester extends React.Component {
   }
 
   handleLogin = async () => {
-    const result = await DBLogin("john@gmail.com", "1234");
+    const result = await DBLogin({email: "john@gmail.com", password: "1234"});
     this.setState({
       text: JSON.stringify(result),
       session_id: result.session_id
     })
+    saveSessionId(result.session_id);
   }
 
   handleLogout = async () => {
-    const result = await DBLogout(this.state.session_id);
+    const result = await DBLogout({session_id: this.state.session_id});
     this.setState({
       text: JSON.stringify(result),
     })
@@ -48,21 +57,34 @@ export class Tester extends React.Component {
   }
 
   handleCreateTask = async () => {
-    const result = await DBCreateTask(this.state.session_id,"New title","new content", 0, [{date: 9999}]);
+    const result = await DBCreateTask({
+      session_id: this.state.session_id,
+      title: "New title",
+      content: "new content", 
+      pinned: 0, 
+      reminders: [{date: 9999}]
+    });
     this.setState({
       text: JSON.stringify(result)
     })
   }
 
   handleDeleteTask = async () => {
-    const result = await DBDeleteTask(this.state.session_id, 2)
+    const result = await DBDeleteTask({session_id: this.state.session_id, task_id: 2});
     this.setState({
       text: JSON.stringify(result)
     })
   }
 
   handleUpdateTask = async () => {
-    const result = await DBUpdateTask(this.state.session_id, 1, "updated title", "updated content", 1, [{date:666}]);
+    const result = await DBUpdateTask({
+      session_id: this.state.session_id, 
+      task_id: 1,
+      title: "updated title", 
+      content: "updated content", 
+      pinned: 1, 
+      reminders: [{date:666}]
+    });
     this.setState({
       text: JSON.stringify(result)
     })

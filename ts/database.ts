@@ -1,35 +1,44 @@
+import { LoginParam, LogoutParam, DeleteTaskParam, CreateTaskParam, UpdateTaskParam, Param } from "./interface";
+
 /**
  * Example of usage:
  * const result = await DBLogin("john@gmail.com", "1234")
  * 
  */
 
-function IPAddress(api) {
+export function serverAddress(): string {
+    return "http://192.168.1.103:5000";
+}
+
+type API = "login" | "logout" | "task";
+
+
+function IPAddress(api: API) {
     /**
      * Example of api is login
      */
-    const target = "http://192.168.1.103:5000/api/" + api;
+    const target = `${serverAddress()}/api/${api}`;
     console.log("Sending request to " + target);
     return target;
 }
 
-export async function DBLogin(email, password) {
+export async function DBLogin(param: LoginParam) {
     const result = await fetch(
         IPAddress("login"),
-        JsonRequest("POST", { email, password })
+        JsonRequest("POST", param)
     );
     return await result.json();
 }
 
-export async function DBLogout(session_id) {
+export async function DBLogout(param: LogoutParam) {
     const result = await fetch(
         IPAddress("logout"),
-        JsonRequest("POST", { session_id })
+        JsonRequest("POST", param)
     );
     return await result.json();
 }
 
-export async function DBFetchTask(session_id) {
+export async function DBFetchTask(session_id: number) {
     const result = await fetch(
         IPAddress("task/" + session_id),
         JsonRequest("GET")
@@ -37,50 +46,32 @@ export async function DBFetchTask(session_id) {
     return await result.json();
 }
 
-export async function DBDeleteTask(session_id, task_id /* number */) {
+export async function DBDeleteTask(param: DeleteTaskParam) {
     const result = await fetch(
         IPAddress("task"),
-        JsonRequest("DELETE", {
-            session_id, 
-            task_id
-        })
+        JsonRequest("DELETE", param)
     );
     return await result.json();
 }
 
-export async function DBUpdateTask(session_id, task_id, title, content, pinned, reminders) {
-    const body = {
-        session_id,
-        task_id,   //: number;
-        title,     //: string;
-        content,   //: string;
-        pinned,    //: number; // Either 1 or 0
-        reminders //: {date: number}[]
-    }
+export async function DBUpdateTask(param: UpdateTaskParam) {
     const result = await fetch(
         IPAddress("task"),
-        JsonRequest("PUT", body)
+        JsonRequest("PUT", param)
     );
     return await result.json();
 }
 
 
-export async function DBCreateTask(session_id, title, content, pinned, reminders) {
-    const body = {
-        session_id, //:   number;
-        title,      //:   string;
-        content,    //:   string;
-        pinned,     //:   number; // Either 1 or 0
-        reminders   //:   {date: number}[]
-    };
+export async function DBCreateTask(param: CreateTaskParam) {
     const result = await fetch(
         IPAddress("task"),
-        JsonRequest("POST", body)
+        JsonRequest("POST", param)
     );
     return await result.json();
 }
 
-function JsonRequest(method /*: POST | GET | DELETE | PUT */, body) {
+function JsonRequest(method : "POST" | "GET" | "DELETE" | "PUT", body: Param) {
     console.log("Body = ");
     console.log(body);
     if(body) {
