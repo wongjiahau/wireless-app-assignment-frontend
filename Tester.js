@@ -55,14 +55,14 @@ export class Tester extends React.Component {
   }
 
   handleDeleteTask = async () => {
-    const result = await DBDeleteTask(2)
+    const result = await DBDeleteTask(this.state.session_id, 2)
     this.setState({
       text: JSON.stringify(result)
     })
   }
 
   handleUpdateTask = async () => {
-    const result = await DBUpdateTask(1, "updated title", "updated content", 1, [{date:666}]);
+    const result = await DBUpdateTask(this.state.session_id, 1, "updated title", "updated content", 1, [{date:666}]);
     this.setState({
       text: JSON.stringify(result)
     })

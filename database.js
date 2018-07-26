@@ -8,7 +8,7 @@ function IPAddress(api) {
     /**
      * Example of api is login
      */
-    const target = "http://192.168.0.103:5000/api/" + api;
+    const target = "http://192.168.1.103:5000/api/" + api;
     console.log("Sending request to " + target);
     return target;
 }
@@ -37,16 +37,20 @@ export async function DBFetchTask(session_id) {
     return await result.json();
 }
 
-export async function DBDeleteTask(task_id /* number */) {
+export async function DBDeleteTask(session_id, task_id /* number */) {
     const result = await fetch(
         IPAddress("task"),
-        JsonRequest("DELETE", {task_id})
+        JsonRequest("DELETE", {
+            session_id, 
+            task_id
+        })
     );
     return await result.json();
 }
 
-export async function DBUpdateTask(task_id, title, content, pinned, reminders) {
+export async function DBUpdateTask(session_id, task_id, title, content, pinned, reminders) {
     const body = {
+        session_id,
         task_id,   //: number;
         title,     //: string;
         content,   //: string;
